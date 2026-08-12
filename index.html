@@ -3,10 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Osiaru — Software, systems, and the bots that keep them running</title>
-<meta name="description" content="Osiaru builds full-stack products, APIs, AI-powered features and Telegram bots that stay up and keep working — from student platforms to production backends.">
+<title>Osiaru — Full-Stack Developer & Systems Builder</title>
+<meta name="description" content="Osiaru builds full-stack products, APIs, AI-powered features, and Telegram bots that stay up and keep working — from student platforms to production backends.">
+<meta name="author" content="Osiaru">
+<meta name="theme-color" content="#0A0D0B">
+<link rel="canonical" href="https://osiaru.name.ng/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Osiaru — Full-Stack Developer & Systems Builder">
+<meta property="og:description" content="Full-stack software, APIs, and AI automation — built to run reliably.">
+<meta property="og:url" content="https://osiaru.name.ng/">
+<meta property="og:site_name" content="Osiaru">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Osiaru — Full-Stack Developer & Systems Builder">
+<meta name="twitter:description" content="Full-stack software, APIs, and AI automation — built to run reliably.">
+
+<!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Osiaru",
+  "url": "https://osiaru.name.ng",
+  "email": "mailto:hello@osiaru.name.ng",
+  "jobTitle": "Full-Stack Developer",
+  "knowsAbout": ["Full-stack Web Development", "APIs", "UI/UX", "AI & Automation", "Telegram Bots"],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Port Harcourt",
+    "addressCountry": "NG"
+  }
+}
+</script>
+
 <style>
   :root{
     --bg:#0A0D0B;
@@ -27,12 +64,14 @@
     --radius:14px;
     --radius-sm:8px;
     --ease:cubic-bezier(.4,0,.2,1);
+    --header-height:70px;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; scroll-padding-top:var(--header-height);}
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
-    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+    *,*::before,*::after{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+    .reveal{opacity:1 !important; transform:none !important;}
   }
   body{
     background:var(--bg);
@@ -41,11 +80,20 @@
     line-height:1.6;
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
+    position:relative;
   }
-  a{color:inherit;}
+  a{color:inherit; text-decoration:none;}
+  ul{list-style:none;}
   .wrap{max-width:1080px;margin:0 auto;padding:0 2rem;}
 
-  /* subtle background grid, like a schematic — ties to "systems" theme */
+  /* Custom scrollbar */
+  ::-webkit-scrollbar{width:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--surface-2); border-radius:20px; border:2px solid var(--bg);}
+  ::-webkit-scrollbar-thumb:hover{background:var(--border-hi);}
+  ::selection{background:rgba(74,222,128,0.2); color:#fff;}
+
+  /* Subtle background grid */
   .grid-field{
     position:fixed;inset:0;z-index:0;pointer-events:none;
     background-image:
@@ -53,6 +101,22 @@
       linear-gradient(to bottom, rgba(237,234,224,0.025) 1px, transparent 1px);
     background-size:56px 56px;
     mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* Skip link */
+  .skip-link{
+    position:fixed;top:-100px;left:1rem;z-index:2000;
+    background:var(--green);color:#06120A;padding:0.8rem 1.2rem;
+    border-radius:6px;font-weight:600;font-size:0.9rem;
+    transition:top 0.3s;
+  }
+  .skip-link:focus{top:1rem;}
+
+  /* Scroll progress */
+  .scroll-progress{
+    position:fixed;top:0;left:0;height:3px;width:0%;
+    background:linear-gradient(90deg, var(--green), var(--amber));
+    z-index:1002;transition:width 0.1s linear;
   }
 
   /* ── Nav ─────────────────────────── */
@@ -70,21 +134,30 @@
     padding:0.9rem 2rem;
   }
   .nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
-  .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.15rem;text-decoration:none;letter-spacing:-0.3px;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.15rem;letter-spacing:-0.3px;}
   .logo-mark{
     width:10px;height:10px;border-radius:2px;background:var(--green);
     box-shadow:0 0 12px rgba(74,222,128,0.6);
+    animation:logoPulse 3s ease-in-out infinite;
   }
-  .nav-links{display:flex;list-style:none;gap:2.2rem;align-items:center;}
-  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.88rem;font-weight:500;transition:color 0.2s;}
+  @keyframes logoPulse{0%,100%{box-shadow:0 0 8px rgba(74,222,128,0.4);}50%{box-shadow:0 0 16px rgba(74,222,128,0.8);}}
+  .nav-links{display:flex;gap:2.2rem;align-items:center;}
+  .nav-links a{color:var(--text-dim);font-size:0.88rem;font-weight:500;transition:color 0.2s, opacity 0.2s; position:relative;}
+  .nav-links a:not(.btn-nav)::after{
+    content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--green);
+    transition:width 0.25s var(--ease);
+  }
+  .nav-links a:not(.btn-nav):hover::after,
+  .nav-links a.active::after{width:100%;}
   .nav-links a:hover{color:var(--text);}
+  .nav-links a.active{color:var(--green);}
   .btn-nav{
     font-family:var(--mono);
     background:var(--surface-2);border:1px solid var(--border-hi);
     color:var(--text);padding:0.5rem 1.1rem;border-radius:6px;
-    font-size:0.8rem;text-decoration:none;transition:all 0.2s;
+    font-size:0.8rem;transition:all 0.2s;
   }
-  .btn-nav:hover{border-color:var(--green);color:var(--green);}
+  .btn-nav:hover{border-color:var(--green);color:var(--green); box-shadow:0 0 12px rgba(74,222,128,0.15);}
   .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1001;}
   .hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:0.3s;}
   .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
@@ -95,7 +168,7 @@
   .hero{
     position:relative;z-index:1;
     min-height:100vh;display:flex;flex-direction:column;justify-content:center;
-    padding:9rem 2rem 4rem;
+    padding:8rem 2rem 4rem;
   }
   .hero-inner{max-width:1080px;margin:0 auto;width:100%;}
   .boot-line{
@@ -124,7 +197,7 @@
   }
   .btn{
     padding:0.8rem 1.7rem;border-radius:8px;font-weight:600;font-size:0.92rem;
-    cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+    cursor:pointer;display:inline-flex;align-items:center;gap:8px;
     transition:all 0.2s var(--ease);
   }
   .btn-primary{background:var(--green);color:#06120A;border:1px solid var(--green);}
@@ -132,7 +205,28 @@
   .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border-hi);}
   .btn-outline:hover{border-color:var(--text-dim);background:var(--surface);}
 
-  /* ── Systems board (signature element) ── */
+  /* Terminal card */
+  .terminal{
+    margin-top:2.8rem;max-width:540px;border:1px solid var(--border);border-radius:10px;
+    background:rgba(18,22,15,0.7);backdrop-filter:blur(6px);overflow:hidden;
+    opacity:0;animation:fadeUp 0.7s var(--ease) 0.7s forwards;
+  }
+  .term-head{
+    display:flex;align-items:center;gap:6px;padding:0.6rem 1rem;
+    background:var(--surface-2);border-bottom:1px solid var(--border);
+    font-family:var(--mono);font-size:0.72rem;color:var(--text-faint);
+  }
+  .term-head span{width:10px;height:10px;border-radius:50%;background:var(--border-hi);}
+  .term-head span:nth-child(1){background:#FF5F56;}
+  .term-head span:nth-child(2){background:#FFBD2E;}
+  .term-head span:nth-child(3){background:#27C93F;}
+  .term-body{padding:1rem 1.2rem;font-family:var(--mono);font-size:0.78rem;line-height:1.8;}
+  .term-body p{color:var(--text-dim);}
+  .term-body .prompt{color:var(--green);margin-right:0.4rem;}
+  .term-body .ok{color:var(--green);}
+  .term-body .ok::before{content:'✓ ';font-weight:700;}
+
+  /* ── Systems board ── */
   .systems{position:relative;z-index:1;padding:5rem 2rem 6rem;}
   .section-eyebrow{
     font-family:var(--mono);font-size:0.78rem;color:var(--green);
@@ -147,7 +241,9 @@
   .board{
     border:1px solid var(--border);border-radius:var(--radius);
     background:var(--surface);overflow:hidden;
+    transition:border-color 0.3s, box-shadow 0.3s;
   }
+  .board:hover{border-color:var(--border-hi); box-shadow:0 10px 30px rgba(0,0,0,0.3);}
   .board-head{
     display:grid;grid-template-columns:1.6fr 2.4fr 1fr;
     padding:0.9rem 1.6rem;font-family:var(--mono);font-size:0.72rem;
@@ -162,7 +258,8 @@
   .board-row:last-child{border-bottom:none;}
   .board-row:hover{background:var(--surface-2);}
   .sys-name{display:flex;align-items:center;gap:0.7rem;font-family:var(--display);font-weight:600;font-size:1.02rem;color:#fff;}
-  .sys-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 8px rgba(74,222,128,0.6);}
+  .sys-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 8px rgba(74,222,128,0.6); transition:transform 0.2s;}
+  .board-row:hover .sys-dot{transform:scale(1.3);}
   .sys-desc{color:var(--text-dim);font-size:0.92rem;padding-right:1rem;}
   .sys-stat{font-family:var(--mono);font-size:0.78rem;color:var(--text-faint);text-align:right;}
   .sys-stat b{color:var(--amber);font-weight:500;}
@@ -179,7 +276,9 @@
     border:1px solid var(--border);border-radius:var(--radius);
     background:linear-gradient(160deg, var(--surface) 0%, var(--surface) 100%);
     padding:2.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden;
+    transition:transform 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
+  .case:hover{border-color:var(--border-hi); transform:translateY(-3px); box-shadow:0 14px 40px rgba(0,0,0,0.3);}
   .case::before{
     content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;
     background:var(--green);filter:blur(120px);opacity:0.1;pointer-events:none;
@@ -199,20 +298,22 @@
     font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);
     background:var(--surface-2);border:1px solid var(--border);
     padding:0.35rem 0.7rem;border-radius:6px;
+    transition:color 0.2s, border-color 0.2s;
   }
+  .tag:hover{color:var(--green);border-color:var(--green-dim);}
   .case-link{
     margin-top:1.8rem;display:inline-flex;align-items:center;gap:6px;
-    font-size:0.88rem;font-weight:600;color:var(--green);text-decoration:none;
-    border-bottom:1px solid transparent;
+    font-size:0.88rem;font-weight:600;color:var(--green);
+    border-bottom:1px solid transparent;transition:border-color 0.2s, gap 0.2s;
   }
-  .case-link:hover{border-bottom-color:var(--green);}
+  .case-link:hover{border-bottom-color:var(--green); gap:10px;}
 
   .side-work{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;}
   .mini-case{
     border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);
-    padding:1.8rem;transition:border-color 0.2s, transform 0.2s;
+    padding:1.8rem;transition:border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   }
-  .mini-case:hover{border-color:var(--border-hi);transform:translateY(-2px);}
+  .mini-case:hover{border-color:var(--border-hi);transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,0.2);}
   .mini-case h4{font-family:var(--display);font-weight:600;font-size:1.05rem;color:#fff;margin-bottom:0.5rem;}
   .mini-case p{color:var(--text-dim);font-size:0.88rem;margin-bottom:1rem;}
   @media(max-width:680px){.side-work{grid-template-columns:1fr;} .case{padding:1.8rem;}}
@@ -223,7 +324,9 @@
   .approach-item{
     display:grid;grid-template-columns:100px 1fr;gap:1.5rem;
     padding:2rem 0;border-bottom:1px solid var(--border);align-items:baseline;
+    transition:background 0.2s;
   }
+  .approach-item:hover{background:linear-gradient(90deg, transparent, rgba(74,222,128,0.02));}
   .approach-item .tag-mono{font-family:var(--mono);font-size:0.78rem;color:var(--amber);}
   .approach-item h4{font-family:var(--display);font-weight:600;font-size:1.15rem;color:#fff;margin-bottom:0.4rem;}
   .approach-item p{color:var(--text-dim);font-size:0.92rem;max-width:560px;}
@@ -235,7 +338,9 @@
     max-width:1080px;margin:0 auto;
     border:1px solid var(--border-hi);border-radius:var(--radius);
     background:var(--surface);padding:4rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+    transition:border-color 0.3s, box-shadow 0.3s;
   }
+  .cta-box:hover{border-color:var(--green); box-shadow:0 0 30px rgba(74,222,128,0.1);}
   .cta-box::before{
     content:'';position:absolute;width:340px;height:340px;background:var(--green);
     filter:blur(140px);opacity:0.12;top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;
@@ -254,10 +359,27 @@
   footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 2rem;}
   .footer-inner{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;}
   .footer-brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;color:var(--text-dim);font-size:0.95rem;}
-  .footer-links{display:flex;gap:1.8rem;list-style:none;flex-wrap:wrap;}
-  .footer-links a{color:var(--text-faint);text-decoration:none;font-size:0.82rem;transition:color 0.2s;}
+  .footer-links{display:flex;gap:1.8rem;flex-wrap:wrap;}
+  .footer-links a{color:var(--text-faint);font-size:0.82rem;transition:color 0.2s;}
   .footer-links a:hover{color:var(--text-dim);}
   .footer-note{font-family:var(--mono);font-size:0.75rem;color:var(--text-faint);}
+
+  /* Back to top */
+  .back-to-top{
+    position:fixed;bottom:2rem;right:2rem;z-index:1000;
+    width:44px;height:44px;border-radius:50%;
+    background:var(--surface-2);border:1px solid var(--border-hi);color:var(--text);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    opacity:0;visibility:hidden;transform:translateY(10px);
+    transition:all 0.3s var(--ease);
+    font-size:1.1rem;
+  }
+  .back-to-top.visible{opacity:1;visibility:visible;transform:translateY(0);}
+  .back-to-top:hover{background:var(--green);color:#06120A;border-color:var(--green);}
+
+  /* Reveal on scroll */
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity 0.6s var(--ease), transform 0.6s var(--ease);}
+  .reveal.visible{opacity:1;transform:translateY(0);}
 
   :focus-visible{outline:2px solid var(--green);outline-offset:3px;}
 
@@ -269,11 +391,15 @@
     }
     .nav-links.open{right:0;}
     .hamburger{display:flex;}
+    .hero{padding-top:6rem;}
+    .terminal{margin-top:2rem;}
   }
 </style>
 </head>
 <body>
 <div class="grid-field"></div>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="scroll-progress" id="scrollProgress"></div>
 
 <nav id="navbar">
   <div class="nav-inner">
@@ -288,15 +414,30 @@
   </div>
 </nav>
 
+<main id="main">
 <!-- ── Hero ─────────────────────────── -->
 <section class="hero">
   <div class="hero-inner">
     <div class="boot-line">systems nominal — accepting new work</div>
     <h1>I build the backend, the bots,<br>and the bits users never see —<br><em>but always feel.</em></h1>
-    <p class="lede">Full-stack software, APIs that don't fall over, and the AI and automation layered on top. Currently running a student platform used across a Nigerian university — end to end, alone.</p>
+    <p class="lede">Full-stack software, APIs that don't fall over, and the AI and automation layered on top. Currently maintaining a student platform used by thousands at a Nigerian university — designed, built, and deployed end-to-end by me.</p>
     <div class="hero-buttons">
       <a href="#work" class="btn btn-primary">See what's running →</a>
       <a href="#contact" class="btn btn-outline">Start a project</a>
+    </div>
+
+    <!-- Terminal status card -->
+    <div class="terminal" aria-hidden="true">
+      <div class="term-head">
+        <span></span><span></span><span></span> osiaru@production
+      </div>
+      <div class="term-body">
+        <p><span class="prompt">$</span> osiaru --status</p>
+        <p class="ok">backend: online</p>
+        <p class="ok">api rate limit: 100 req/min</p>
+        <p class="ok">telegram bot: polling</p>
+        <p class="ok">ai pipeline: ready</p>
+      </div>
     </div>
   </div>
 </section>
@@ -306,9 +447,9 @@
   <div class="wrap">
     <p class="section-eyebrow">// what I run</p>
     <h2 class="section-title">Five systems, one operator</h2>
-    <p class="section-sub">Not a services menu — this is the actual stack I use to take a product from idea to something people rely on daily.</p>
+    <p class="section-sub">These are the core competencies I apply to every project — from idea to production.</p>
 
-    <div class="board">
+    <div class="board reveal">
       <div class="board-head"><span>System</span><span>What it covers</span><span>Notes</span></div>
 
       <div class="board-row">
@@ -351,7 +492,7 @@
     <h2 class="section-title">Selected work</h2>
     <p class="section-sub">Real platforms, still running, still being extended.</p>
 
-    <div class="case">
+    <div class="case reveal">
       <span class="case-tag">● live — flagship build</span>
       <h3>ProjectPQ</h3>
       <p class="desc">A student super-app for University of Port Harcourt, built solo. It combines a library of past exam questions with AI-generated explanations, auto-graded CBT quizzes, a CGPA calculator, a LiveKit-powered group study room, push notifications, and a vendor marketplace with escrow — all aimed at 20,000+ students.</p>
@@ -376,12 +517,12 @@
     </div>
 
     <div class="side-work">
-      <div class="mini-case">
+      <div class="mini-case reveal">
         <h4>ProjectPQ Market</h4>
         <p>A vendor marketplace built into the platform — escrow-backed transactions, a dashboard for sellers, and shareable vendor profile pages with proper social preview cards.</p>
         <div class="tag-row"><span class="tag">Flutterwave</span><span class="tag">Monnify</span></div>
       </div>
-      <div class="mini-case">
+      <div class="mini-case reveal">
         <h4>First Baptist Church, Ovom</h4>
         <p>A freelance church website built on the same design-token system used across my other work — clean, fast, and easy for a non-technical team to maintain.</p>
         <div class="tag-row"><span class="tag">Design system</span><span class="tag">Freelance</span></div>
@@ -398,21 +539,21 @@
     <p class="section-sub">No agency layers. This is how a project actually moves when one person owns it end to end.</p>
 
     <div class="approach-list">
-      <div class="approach-item">
+      <div class="approach-item reveal">
         <span class="tag-mono">understand</span>
         <div>
           <h4>Start from the real constraint</h4>
           <p>Every platform I've built has had a real limit to design around — low-end devices, patchy Nigerian payment rails, or a budget that rules out a full team. Good architecture starts by naming that constraint, not ignoring it.</p>
         </div>
       </div>
-      <div class="approach-item">
+      <div class="approach-item reveal">
         <span class="tag-mono">build</span>
         <div>
           <h4>Ship in working slices</h4>
           <p>Features go out as complete, usable pieces — a quiz that grades itself, a bot that actually answers, a payment page that actually confirms — rather than a wall of code merged all at once.</p>
         </div>
       </div>
-      <div class="approach-item">
+      <div class="approach-item reveal">
         <span class="tag-mono">harden</span>
         <div>
           <h4>Security is not a later step</h4>
@@ -425,15 +566,16 @@
 
 <!-- ── CTA ──────────────────────────── -->
 <section class="cta" id="contact">
-  <div class="cta-box">
+  <div class="cta-box reveal">
     <h2>Have something that needs to run reliably?</h2>
-    <p>Tell me what you're building — a platform, an API, a bot, or all three. No pitch deck required.</p>
+    <p>Tell me what you're building — a platform, an API, a bot, or all three. Let's discuss your requirements.</p>
     <div class="cta-actions">
       <a href="mailto:hello@osiaru.name.ng" class="btn btn-primary">✉ Email me</a>
       <button class="email-copy" id="copyEmail" type="button">hello@osiaru.name.ng — click to copy</button>
     </div>
   </div>
 </section>
+</main>
 
 <footer>
   <div class="footer-inner">
@@ -444,23 +586,41 @@
       <li><a href="https://github.com/OsiaruRobert" target="_blank" rel="noopener">GitHub</a></li>
       <li><a href="mailto:hello@osiaru.name.ng">Contact</a></li>
     </ul>
-    <span class="footer-note">© 2026 osiaru</span>
+    <span class="footer-note">© <span id="year"></span> osiaru </span>
   </div>
 </footer>
 
+<button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
 <script>
+  // Navbar scroll effect
   const navbar = document.getElementById('navbar');
   const hamburger = document.getElementById('hamburger');
   const navLinks = document.getElementById('navLinks');
+  const scrollProgress = document.getElementById('scrollProgress');
+  const backToTop = document.getElementById('backToTop');
+  const yearSpan = document.getElementById('year');
 
+  // Set year
+  yearSpan.textContent = new Date().getFullYear();
+
+  // Scroll progress + navbar + back-to-top
   window.addEventListener('scroll', () => {
     navbar.classList.toggle('scrolled', window.scrollY > 40);
+    backToTop.classList.toggle('visible', window.scrollY > 400);
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    scrollProgress.style.width = progress + '%';
   });
 
+  // Mobile menu toggle
   hamburger.addEventListener('click', () => {
     hamburger.classList.toggle('active');
     navLinks.classList.toggle('open');
   });
+
+  // Close menu on link click
   navLinks.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       hamburger.classList.remove('active');
@@ -468,6 +628,12 @@
     });
   });
 
+  // Back to top
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Copy email
   const copyBtn = document.getElementById('copyEmail');
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText('hello@osiaru.name.ng').then(() => {
@@ -476,6 +642,33 @@
       setTimeout(() => { copyBtn.textContent = original; }, 1800);
     });
   });
+
+  // Intersection Observer for reveal animations
+  const revealElements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  revealElements.forEach(el => observer.observe(el));
+
+  // Active nav link highlighting
+  const sections = document.querySelectorAll('section[id]');
+  const navAnchorLinks = document.querySelectorAll('.nav-links a:not(.btn-nav)');
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const currentId = entry.target.id;
+        navAnchorLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === `#${currentId}`);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -60% 0px' });
+  sections.forEach(section => sectionObserver.observe(section));
 </script>
 </body>
 </html>
