@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Osiaru — Software, systems, and the bots that keep them running</title>
+<meta name="description" content="Osiaru builds full-stack products, APIs, AI-powered features and Telegram bots that stay up and keep working — from student platforms to production backends.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0D0B;
+    --surface:#12160F;
+    --surface-2:#191F17;
+    --border:#262E23;
+    --border-hi:#3A4636;
+    --text:#EDEAE0;
+    --text-dim:#9AA396;
+    --text-faint:#5E695A;
+    --green:#4ADE80;
+    --green-dim:rgba(74,222,128,0.12);
+    --amber:#F0A93A;
+    --amber-dim:rgba(240,169,58,0.12);
+    --display:'Space Grotesk',sans-serif;
+    --body:'Inter',sans-serif;
+    --mono:'JetBrains Mono',monospace;
+    --radius:14px;
+    --radius-sm:8px;
+    --ease:cubic-bezier(.4,0,.2,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 2rem;}
+
+  /* subtle background grid, like a schematic — ties to "systems" theme */
+  .grid-field{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(to right, rgba(237,234,224,0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(237,234,224,0.025) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 90%);
+  }
+
+  /* ── Nav ─────────────────────────── */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:1000;
+    padding:1.25rem 2rem;
+    transition:all 0.3s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  nav.scrolled{
+    background:rgba(10,13,11,0.85);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    border-bottom-color:var(--border);
+    padding:0.9rem 2rem;
+  }
+  .nav-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+  .logo{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.15rem;text-decoration:none;letter-spacing:-0.3px;}
+  .logo-mark{
+    width:10px;height:10px;border-radius:2px;background:var(--green);
+    box-shadow:0 0 12px rgba(74,222,128,0.6);
+  }
+  .nav-links{display:flex;list-style:none;gap:2.2rem;align-items:center;}
+  .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.88rem;font-weight:500;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--text);}
+  .btn-nav{
+    font-family:var(--mono);
+    background:var(--surface-2);border:1px solid var(--border-hi);
+    color:var(--text);padding:0.5rem 1.1rem;border-radius:6px;
+    font-size:0.8rem;text-decoration:none;transition:all 0.2s;
+  }
+  .btn-nav:hover{border-color:var(--green);color:var(--green);}
+  .hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:1001;}
+  .hamburger span{width:22px;height:2px;background:var(--text);border-radius:2px;transition:0.3s;}
+  .hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px);}
+  .hamburger.active span:nth-child(2){opacity:0;}
+  .hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px);}
+
+  /* ── Hero ────────────────────────── */
+  .hero{
+    position:relative;z-index:1;
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:9rem 2rem 4rem;
+  }
+  .hero-inner{max-width:1080px;margin:0 auto;width:100%;}
+  .boot-line{
+    font-family:var(--mono);font-size:0.8rem;color:var(--green);
+    display:flex;align-items:center;gap:0.6rem;margin-bottom:1.6rem;
+    opacity:0;animation:fadeUp 0.6s var(--ease) 0.1s forwards;
+  }
+  .boot-line::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(74,222,128,0.5);}50%{box-shadow:0 0 0 6px rgba(74,222,128,0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  .hero h1{
+    font-family:var(--display);font-weight:600;
+    font-size:clamp(2.4rem,5.2vw,4rem);
+    line-height:1.08;letter-spacing:-1.5px;max-width:820px;color:#fff;
+    opacity:0;animation:fadeUp 0.7s var(--ease) 0.25s forwards;
+  }
+  .hero h1 em{font-style:normal;color:var(--green);}
+  .hero p.lede{
+    margin-top:1.5rem;max-width:560px;color:var(--text-dim);font-size:1.08rem;
+    opacity:0;animation:fadeUp 0.7s var(--ease) 0.4s forwards;
+  }
+  .hero-buttons{
+    display:flex;gap:1rem;margin-top:2.4rem;flex-wrap:wrap;
+    opacity:0;animation:fadeUp 0.7s var(--ease) 0.55s forwards;
+  }
+  .btn{
+    padding:0.8rem 1.7rem;border-radius:8px;font-weight:600;font-size:0.92rem;
+    cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+    transition:all 0.2s var(--ease);
+  }
+  .btn-primary{background:var(--green);color:#06120A;border:1px solid var(--green);}
+  .btn-primary:hover{background:#5EEB93;box-shadow:0 0 24px rgba(74,222,128,0.35);transform:translateY(-2px);}
+  .btn-outline{background:transparent;color:var(--text);border:1px solid var(--border-hi);}
+  .btn-outline:hover{border-color:var(--text-dim);background:var(--surface);}
+
+  /* ── Systems board (signature element) ── */
+  .systems{position:relative;z-index:1;padding:5rem 2rem 6rem;}
+  .section-eyebrow{
+    font-family:var(--mono);font-size:0.78rem;color:var(--green);
+    text-transform:lowercase;letter-spacing:0.3px;margin-bottom:0.9rem;
+  }
+  .section-title{
+    font-family:var(--display);font-weight:600;font-size:clamp(1.8rem,3.4vw,2.5rem);
+    letter-spacing:-0.8px;color:#fff;margin-bottom:0.7rem;
+  }
+  .section-sub{color:var(--text-dim);max-width:520px;margin-bottom:3rem;font-size:1rem;}
+
+  .board{
+    border:1px solid var(--border);border-radius:var(--radius);
+    background:var(--surface);overflow:hidden;
+  }
+  .board-head{
+    display:grid;grid-template-columns:1.6fr 2.4fr 1fr;
+    padding:0.9rem 1.6rem;font-family:var(--mono);font-size:0.72rem;
+    color:var(--text-faint);text-transform:uppercase;letter-spacing:0.8px;
+    border-bottom:1px solid var(--border);
+  }
+  .board-row{
+    display:grid;grid-template-columns:1.6fr 2.4fr 1fr;
+    padding:1.5rem 1.6rem;border-bottom:1px solid var(--border);
+    align-items:center;transition:background 0.2s;
+  }
+  .board-row:last-child{border-bottom:none;}
+  .board-row:hover{background:var(--surface-2);}
+  .sys-name{display:flex;align-items:center;gap:0.7rem;font-family:var(--display);font-weight:600;font-size:1.02rem;color:#fff;}
+  .sys-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;box-shadow:0 0 8px rgba(74,222,128,0.6);}
+  .sys-desc{color:var(--text-dim);font-size:0.92rem;padding-right:1rem;}
+  .sys-stat{font-family:var(--mono);font-size:0.78rem;color:var(--text-faint);text-align:right;}
+  .sys-stat b{color:var(--amber);font-weight:500;}
+
+  @media(max-width:720px){
+    .board-head{display:none;}
+    .board-row{grid-template-columns:1fr;gap:0.5rem;padding:1.3rem 1.4rem;}
+    .sys-stat{text-align:left;}
+  }
+
+  /* ── Work ─────────────────────────── */
+  .work{position:relative;z-index:1;padding:2rem 2rem 6rem;}
+  .case{
+    border:1px solid var(--border);border-radius:var(--radius);
+    background:linear-gradient(160deg, var(--surface) 0%, var(--surface) 100%);
+    padding:2.6rem;margin-bottom:1.5rem;position:relative;overflow:hidden;
+  }
+  .case::before{
+    content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;
+    background:var(--green);filter:blur(120px);opacity:0.1;pointer-events:none;
+  }
+  .case-tag{
+    display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:0.72rem;
+    background:var(--green-dim);color:var(--green);padding:0.3rem 0.7rem;border-radius:20px;
+    margin-bottom:1.2rem;
+  }
+  .case h3{font-family:var(--display);font-weight:600;font-size:1.7rem;color:#fff;letter-spacing:-0.5px;margin-bottom:0.8rem;}
+  .case p.desc{color:var(--text-dim);max-width:640px;margin-bottom:1.6rem;font-size:0.98rem;}
+  .case-stats{display:flex;gap:2.2rem;flex-wrap:wrap;margin-bottom:1.8rem;}
+  .case-stat b{display:block;font-family:var(--display);font-size:1.5rem;color:var(--green);font-weight:600;}
+  .case-stat span{font-size:0.78rem;color:var(--text-faint);font-family:var(--mono);}
+  .tag-row{display:flex;flex-wrap:wrap;gap:0.5rem;}
+  .tag{
+    font-family:var(--mono);font-size:0.75rem;color:var(--text-dim);
+    background:var(--surface-2);border:1px solid var(--border);
+    padding:0.35rem 0.7rem;border-radius:6px;
+  }
+  .case-link{
+    margin-top:1.8rem;display:inline-flex;align-items:center;gap:6px;
+    font-size:0.88rem;font-weight:600;color:var(--green);text-decoration:none;
+    border-bottom:1px solid transparent;
+  }
+  .case-link:hover{border-bottom-color:var(--green);}
+
+  .side-work{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;}
+  .mini-case{
+    border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);
+    padding:1.8rem;transition:border-color 0.2s, transform 0.2s;
+  }
+  .mini-case:hover{border-color:var(--border-hi);transform:translateY(-2px);}
+  .mini-case h4{font-family:var(--display);font-weight:600;font-size:1.05rem;color:#fff;margin-bottom:0.5rem;}
+  .mini-case p{color:var(--text-dim);font-size:0.88rem;margin-bottom:1rem;}
+  @media(max-width:680px){.side-work{grid-template-columns:1fr;} .case{padding:1.8rem;}}
+
+  /* ── Approach ─────────────────────── */
+  .approach{position:relative;z-index:1;padding:2rem 2rem 6rem;}
+  .approach-list{border-top:1px solid var(--border);}
+  .approach-item{
+    display:grid;grid-template-columns:100px 1fr;gap:1.5rem;
+    padding:2rem 0;border-bottom:1px solid var(--border);align-items:baseline;
+  }
+  .approach-item .tag-mono{font-family:var(--mono);font-size:0.78rem;color:var(--amber);}
+  .approach-item h4{font-family:var(--display);font-weight:600;font-size:1.15rem;color:#fff;margin-bottom:0.4rem;}
+  .approach-item p{color:var(--text-dim);font-size:0.92rem;max-width:560px;}
+  @media(max-width:600px){.approach-item{grid-template-columns:1fr;gap:0.4rem;}}
+
+  /* ── CTA ──────────────────────────── */
+  .cta{position:relative;z-index:1;padding:2rem 2rem 7rem;}
+  .cta-box{
+    max-width:1080px;margin:0 auto;
+    border:1px solid var(--border-hi);border-radius:var(--radius);
+    background:var(--surface);padding:4rem 2.5rem;text-align:center;position:relative;overflow:hidden;
+  }
+  .cta-box::before{
+    content:'';position:absolute;width:340px;height:340px;background:var(--green);
+    filter:blur(140px);opacity:0.12;top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;
+  }
+  .cta-box h2{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3.2vw,2.3rem);color:#fff;letter-spacing:-0.6px;margin-bottom:0.9rem;position:relative;}
+  .cta-box p{color:var(--text-dim);max-width:460px;margin:0 auto 2rem;position:relative;}
+  .cta-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative;}
+  .email-copy{
+    font-family:var(--mono);font-size:0.85rem;color:var(--text-dim);
+    background:var(--surface-2);border:1px solid var(--border);padding:0.8rem 1.4rem;
+    border-radius:8px;cursor:pointer;transition:all 0.2s;
+  }
+  .email-copy:hover{border-color:var(--green);color:var(--green);}
+
+  /* ── Footer ───────────────────────── */
+  footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.5rem 2rem;}
+  .footer-inner{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;}
+  .footer-brand{display:flex;align-items:center;gap:8px;font-family:var(--display);font-weight:600;color:var(--text-dim);font-size:0.95rem;}
+  .footer-links{display:flex;gap:1.8rem;list-style:none;flex-wrap:wrap;}
+  .footer-links a{color:var(--text-faint);text-decoration:none;font-size:0.82rem;transition:color 0.2s;}
+  .footer-links a:hover{color:var(--text-dim);}
+  .footer-note{font-family:var(--mono);font-size:0.75rem;color:var(--text-faint);}
+
+  :focus-visible{outline:2px solid var(--green);outline-offset:3px;}
+
+  @media(max-width:768px){
+    .nav-links{
+      position:fixed;top:0;right:-100%;width:260px;height:100vh;
+      background:var(--surface);flex-direction:column;padding:5rem 2rem 2rem;gap:1.4rem;
+      border-left:1px solid var(--border);transition:right 0.3s var(--ease);z-index:1000;
+    }
+    .nav-links.open{right:0;}
+    .hamburger{display:flex;}
+  }
+</style>
+</head>
+<body>
+<div class="grid-field"></div>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="logo"><span class="logo-mark"></span>osiaru</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#contact" class="btn-nav">contact --send</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="boot-line">systems nominal — accepting new work</div>
+    <h1>I build the backend, the bots,<br>and the bits users never see —<br><em>but always feel.</em></h1>
+    <p class="lede">Full-stack software, APIs that don't fall over, and the AI and automation layered on top. Currently running a student platform used across a Nigerian university — end to end, alone.</p>
+    <div class="hero-buttons">
+      <a href="#work" class="btn btn-primary">See what's running →</a>
+      <a href="#contact" class="btn btn-outline">Start a project</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Systems (signature) ──────────── -->
+<section class="systems" id="systems">
+  <div class="wrap">
+    <p class="section-eyebrow">// what I run</p>
+    <h2 class="section-title">Five systems, one operator</h2>
+    <p class="section-sub">Not a services menu — this is the actual stack I use to take a product from idea to something people rely on daily.</p>
+
+    <div class="board">
+      <div class="board-head"><span>System</span><span>What it covers</span><span>Notes</span></div>
+
+      <div class="board-row">
+        <div class="sys-name"><span class="sys-dot"></span>Full-stack builds</div>
+        <div class="sys-desc">Node.js / Express backends, MongoDB, and interfaces from plain HTML/CSS to React — shipped as one coherent product, not handed off in pieces.</div>
+        <div class="sys-stat">deployed on <b>3</b> platforms</div>
+      </div>
+
+      <div class="board-row">
+        <div class="sys-name"><span class="sys-dot"></span>APIs &amp; backend</div>
+        <div class="sys-desc">REST APIs designed to survive contact with real traffic — rate limiting, input sanitisation, HMAC-verified webhooks, and auth that doesn't leak.</div>
+        <div class="sys-stat">hardened w/ <b>helmet</b></div>
+      </div>
+
+      <div class="board-row">
+        <div class="sys-name"><span class="sys-dot"></span>UI/UX</div>
+        <div class="sys-desc">Design systems built from CSS custom properties — consistent color, type and spacing tokens that hold up across dark mode, mobile, and new features.</div>
+        <div class="sys-stat">token-based</div>
+      </div>
+
+      <div class="board-row">
+        <div class="sys-name"><span class="sys-dot"></span>AI &amp; automation</div>
+        <div class="sys-desc">LLM pipelines that process real files at scale — long-running background workers, key rotation, and progress reporting, not a single API call in a demo.</div>
+        <div class="sys-stat">handles <b>80MB+</b> jobs</div>
+      </div>
+
+      <div class="board-row">
+        <div class="sys-name"><span class="sys-dot"></span>Telegram bots</div>
+        <div class="sys-desc">Conversational bots that browse content, run quizzes as native polls, and answer questions with AI — built to keep working while you sleep.</div>
+        <div class="sys-stat">built w/ <b>Telegraf</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Work ─────────────────────────── -->
+<section class="work" id="work">
+  <div class="wrap">
+    <p class="section-eyebrow">// currently in production</p>
+    <h2 class="section-title">Selected work</h2>
+    <p class="section-sub">Real platforms, still running, still being extended.</p>
+
+    <div class="case">
+      <span class="case-tag">● live — flagship build</span>
+      <h3>ProjectPQ</h3>
+      <p class="desc">A student super-app for University of Port Harcourt, built solo. It combines a library of past exam questions with AI-generated explanations, auto-graded CBT quizzes, a CGPA calculator, a LiveKit-powered group study room, push notifications, and a vendor marketplace with escrow — all aimed at 20,000+ students.</p>
+
+      <div class="case-stats">
+        <div class="case-stat"><b>20,000+</b><span>target students</span></div>
+        <div class="case-stat"><b>6</b><span>core features shipped</span></div>
+        <div class="case-stat"><b>1</b><span>person building it</span></div>
+      </div>
+
+      <div class="tag-row">
+        <span class="tag">Node.js / Express</span>
+        <span class="tag">MongoDB</span>
+        <span class="tag">AWS S3</span>
+        <span class="tag">Socket.io</span>
+        <span class="tag">LiveKit</span>
+        <span class="tag">Gemini AI</span>
+        <span class="tag">Telegram Bot</span>
+      </div>
+
+      <a href="https://projectpq.name.ng" class="case-link" target="_blank" rel="noopener">View the live platform ↗</a>
+    </div>
+
+    <div class="side-work">
+      <div class="mini-case">
+        <h4>ProjectPQ Market</h4>
+        <p>A vendor marketplace built into the platform — escrow-backed transactions, a dashboard for sellers, and shareable vendor profile pages with proper social preview cards.</p>
+        <div class="tag-row"><span class="tag">Flutterwave</span><span class="tag">Monnify</span></div>
+      </div>
+      <div class="mini-case">
+        <h4>First Baptist Church, Ovom</h4>
+        <p>A freelance church website built on the same design-token system used across my other work — clean, fast, and easy for a non-technical team to maintain.</p>
+        <div class="tag-row"><span class="tag">Design system</span><span class="tag">Freelance</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Approach ─────────────────────── -->
+<section class="approach" id="approach">
+  <div class="wrap">
+    <p class="section-eyebrow">// how it gets built</p>
+    <h2 class="section-title">The approach</h2>
+    <p class="section-sub">No agency layers. This is how a project actually moves when one person owns it end to end.</p>
+
+    <div class="approach-list">
+      <div class="approach-item">
+        <span class="tag-mono">understand</span>
+        <div>
+          <h4>Start from the real constraint</h4>
+          <p>Every platform I've built has had a real limit to design around — low-end devices, patchy Nigerian payment rails, or a budget that rules out a full team. Good architecture starts by naming that constraint, not ignoring it.</p>
+        </div>
+      </div>
+      <div class="approach-item">
+        <span class="tag-mono">build</span>
+        <div>
+          <h4>Ship in working slices</h4>
+          <p>Features go out as complete, usable pieces — a quiz that grades itself, a bot that actually answers, a payment page that actually confirms — rather than a wall of code merged all at once.</p>
+        </div>
+      </div>
+      <div class="approach-item">
+        <span class="tag-mono">harden</span>
+        <div>
+          <h4>Security is not a later step</h4>
+          <p>Rate limiting, input sanitisation, and webhook verification go in alongside the feature, not after an incident. I test this thinking on platforms like PortSwigger's Web Security Academy and TryHackMe as a matter of habit.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ──────────────────────────── -->
+<section class="cta" id="contact">
+  <div class="cta-box">
+    <h2>Have something that needs to run reliably?</h2>
+    <p>Tell me what you're building — a platform, an API, a bot, or all three. No pitch deck required.</p>
+    <div class="cta-actions">
+      <a href="mailto:hello@osiaru.name.ng" class="btn btn-primary">✉ Email me</a>
+      <button class="email-copy" id="copyEmail" type="button">hello@osiaru.name.ng — click to copy</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><span class="logo-mark"></span>osiaru</div>
+    <ul class="footer-links">
+      <li><a href="#systems">Systems</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="https://github.com/UniportPQ" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="mailto:hello@osiaru.name.ng">Contact</a></li>
+    </ul>
+    <span class="footer-note">© 2026 osiaru — built and hosted from Port Harcourt, NG</span>
+  </div>
+</footer>
+
+<script>
+  const navbar = document.getElementById('navbar');
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  const copyBtn = document.getElementById('copyEmail');
+  copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText('hello@osiaru.name.ng').then(() => {
+      const original = copyBtn.textContent;
+      copyBtn.textContent = 'Copied ✓';
+      setTimeout(() => { copyBtn.textContent = original; }, 1800);
+    });
+  });
+</script>
+</body>
+</html>
