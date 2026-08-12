@@ -7,7 +7,9 @@
 <meta name="description" content="Osiaru builds full-stack products, APIs, AI-powered features, and Telegram bots that stay up and keep working — from student platforms to production backends.">
 <meta name="author" content="Osiaru">
 <meta name="theme-color" content="#0A0D0B">
+<meta name="robots" content="index, follow">
 <link rel="canonical" href="https://osiaru.name.ng/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230A0D0B'/%3E%3Crect x='11' y='11' width='10' height='10' rx='2' fill='%234ADE80'/%3E%3C/svg%3E">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -15,11 +17,15 @@
 <meta property="og:description" content="Full-stack software, APIs, and AI automation — built to run reliably.">
 <meta property="og:url" content="https://osiaru.name.ng/">
 <meta property="og:site_name" content="Osiaru">
+<meta property="og:image" content="https://osiaru.name.ng/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Osiaru — Full-Stack Developer & Systems Builder">
 <meta name="twitter:description" content="Full-stack software, APIs, and AI automation — built to run reliably.">
+<meta name="twitter:image" content="https://osiaru.name.ng/og-image.png">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,6 +42,7 @@
   "email": "mailto:hello@osiaru.name.ng",
   "jobTitle": "Full-Stack Developer",
   "knowsAbout": ["Full-stack Web Development", "APIs", "UI/UX", "AI & Automation", "Telegram Bots"],
+  "sameAs": ["https://github.com/OsiaruRobert"],
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Port Harcourt",
@@ -53,7 +60,7 @@
     --border-hi:#3A4636;
     --text:#EDEAE0;
     --text-dim:#9AA396;
-    --text-faint:#5E695A;
+    --text-faint:#7C8977;
     --green:#4ADE80;
     --green-dim:rgba(74,222,128,0.12);
     --amber:#F0A93A;
@@ -397,6 +404,7 @@
 </style>
 </head>
 <body>
+<noscript><style>.reveal{opacity:1 !important;transform:none !important;} .boot-line,.hero h1,.hero p.lede,.hero-buttons,.terminal{opacity:1 !important;animation:none !important;}</style></noscript>
 <div class="grid-field"></div>
 <a class="skip-link" href="#main">Skip to content</a>
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -410,7 +418,7 @@
       <li><a href="#approach">Approach</a></li>
       <li><a href="#contact" class="btn-nav">contact --send</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="hamburger" id="hamburger" aria-label="Menu" aria-controls="navLinks" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
@@ -522,16 +530,13 @@
         <p>A vendor marketplace built into the platform — escrow-backed transactions, a dashboard for sellers, and shareable vendor profile pages with proper social preview cards.</p>
         <div class="tag-row"><span class="tag">Flutterwave</span><span class="tag">Monnify</span></div>
       </div>
-   
 
-<div class="mini-case reveal">
-  <h4>First Baptist Church, Ovom</h4>
-  <p>A freelance church website built on the same design-token system used across my other work — clean, fast, and easy for a non-technical team to maintain.</p>
-  <div class="tag-row"><span class="tag">Design system</span><span class="tag">Freelance</span></div>
-  <a href="https://fbc-ovom-site.vercel.app/" class="case-link" target="_blank" rel="noopener">View site ↗</a>
-</div>
-
-
+      <div class="mini-case reveal">
+        <h4>First Baptist Church, Ovom</h4>
+        <p>A freelance church website built on the same design-token system used across my other work — clean, fast, and easy for a non-technical team to maintain.</p>
+        <div class="tag-row"><span class="tag">Design system</span><span class="tag">Freelance</span></div>
+        <a href="https://fbc-ovom-site.vercel.app/" class="case-link" target="_blank" rel="noopener">View site ↗</a>
+      </div>
     </div>
   </div>
 </section>
@@ -591,7 +596,7 @@
       <li><a href="https://github.com/OsiaruRobert" target="_blank" rel="noopener">GitHub</a></li>
       <li><a href="mailto:hello@osiaru.name.ng">Contact</a></li>
     </ul>
-    <span class="footer-note">© <span id="year"></span> osiaru </span>
+    <span class="footer-note">© <span id="year">2026</span> osiaru </span>
   </div>
 </footer>
 
@@ -621,8 +626,9 @@
 
   // Mobile menu toggle
   hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
+    const isOpen = hamburger.classList.toggle('active');
     navLinks.classList.toggle('open');
+    hamburger.setAttribute('aria-expanded', isOpen);
   });
 
   // Close menu on link click
@@ -630,7 +636,18 @@
     link.addEventListener('click', () => {
       hamburger.classList.remove('active');
       navLinks.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', false);
     });
+  });
+
+  // Close menu on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && navLinks.classList.contains('open')) {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', false);
+      hamburger.focus();
+    }
   });
 
   // Back to top
@@ -641,11 +658,18 @@
   // Copy email
   const copyBtn = document.getElementById('copyEmail');
   copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText('hello@osiaru.name.ng').then(() => {
-      const original = copyBtn.textContent;
+    const original = copyBtn.textContent;
+    const showCopied = () => {
       copyBtn.textContent = 'Copied ✓';
       setTimeout(() => { copyBtn.textContent = original; }, 1800);
-    });
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText('hello@osiaru.name.ng').then(showCopied).catch(() => {
+        window.location.href = 'mailto:hello@osiaru.name.ng';
+      });
+    } else {
+      window.location.href = 'mailto:hello@osiaru.name.ng';
+    }
   });
 
   // Intersection Observer for reveal animations
